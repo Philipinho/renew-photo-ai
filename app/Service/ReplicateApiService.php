@@ -27,7 +27,10 @@ class ReplicateApiService
     public function checkImageRenewalStatus(string $endpointUrl)
     {
         $renewedImage = null;
-        while (!$renewedImage) {
+        $retryCount = 0;
+        $maxRetries = 15;
+
+        while (!$renewedImage && $retryCount < $maxRetries) {
             $finalResponse = Http::withHeaders([
                 'Content-Type' => 'application/json',
                 'Authorization' => 'Token ' . config('replicate.api_key')
@@ -37,6 +40,7 @@ class ReplicateApiService
 
             if ($jsonFinalResponse['status'] === 'succeeded') {
                 $renewedImage = $jsonFinalResponse['output'];
+
             } else if ($jsonFinalResponse['status'] === 'failed') {
                 break;
             } else {
