@@ -19,6 +19,7 @@ class ReplicateApiService
                 'scale' => 2
             ]
         ]);
+        // save to database
 
         $jsonStartResponse = $startResponse->json();
         return $jsonStartResponse['urls']['get'];
@@ -28,7 +29,7 @@ class ReplicateApiService
     {
         $renewedImage = null;
         $retryCount = 0;
-        $maxRetries = 15;
+        $maxRetries = 10;
 
         while (!$renewedImage && $retryCount < $maxRetries) {
             $finalResponse = Http::withHeaders([
@@ -47,6 +48,10 @@ class ReplicateApiService
                 usleep(1);
             }
         }
+
+        // upload $renewedImage to B2.
+        // use url from b2 instead of replicate CDN
+        // update database record once completed
 
         return $renewedImage;
     }
