@@ -16,7 +16,7 @@ class ProcessController extends Controller
         // TODO: upload image to B2
 
         $request->validate([
-            'file' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'file' => 'required|image|mimes:jpeg,png,jpg,gif,svg,webp|max:2048',
         ]);
 
         $image = $request->file('file');

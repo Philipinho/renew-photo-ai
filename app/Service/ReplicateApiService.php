@@ -6,36 +6,64 @@ use Illuminate\Support\Facades\Http;
 
 class ReplicateApiService
 {
+    /**
+     * @throws \Exception
+     */
     public function startImageRenewal(string $imageUrl)
     {
-        $startResponse = Http::withHeaders([
-            'Content-Type' => 'application/json',
-            'Authorization' => 'Token ' . config('replicate.api_key')
-        ])->post('https://api.replicate.com/v1/predictions', [
-            'version' => config('replicate.version'),
-            'input' => [
-                'img' => $imageUrl,
-                'version' => 'v1.4',
-                'scale' => 2
-            ]
-        ]);
-        // save to database
+        try {
+            $startResponse = Http::withHeaders([
+                'Content-Type' => 'application/json',
+                'Authorization' => 'Token ' . config('replicate.api_key')
+            ])->post('https://api.replicate.com/v1/predictions', [
+                'version' => config('replicate.version'),
+                'input' => [
+                    'img' => $imageUrl,
+                    'version' => 'v1.4',
+                    'scale' => 2
+                ]
+            ]);
+        } catch (\Exception $e) {
+            // Handle exception
+            throw new \Exception("Failed to start image renewal: " . $e->getMessage());
+        }
 
+        // Check for API errors
         $jsonStartResponse = $startResponse->json();
+
+        if (isset($jsonStartResponse['error'])) {
+            throw new \Exception("Failed to start image renewal: " . $jsonStartResponse['error']);
+        }
+
+        // Save to database
+
         return $jsonStartResponse['urls']['get'];
     }
+
 
     public function checkImageRenewalStatus(string $endpointUrl)
     {
         $renewedImage = null;
         $retryCount = 0;
-        $maxRetries = 10;
+        $maxRetries = 8;
 
         while (!$renewedImage && $retryCount < $maxRetries) {
-            $finalResponse = Http::withHeaders([
-                'Content-Type' => 'application/json',
-                'Authorization' => 'Token ' . config('replicate.api_key')
-            ])->get($endpointUrl);
+            try {
+                $finalResponse = Http::withHeaders([
+                    'Content-Type' => 'application/json',
+                    'Authorization' => 'Token ' . config('replicate.api_key')
+                ])->get($endpointUrl);
+            } catch (\Exception $e) {
+                // Handle exception
+                // log errors to admin
+                // $jsonFinalResponse['error']
+                return $this->errorResponse($e->getCode());
+            }
+
+            // Check for HTTP errors
+            if ($finalResponse->failed()) {
+                return $this->errorResponse($finalResponse->status());
+            }
 
             $jsonFinalResponse = $finalResponse->json();
 
@@ -43,16 +71,30 @@ class ReplicateApiService
                 $renewedImage = $jsonFinalResponse['output'];
 
             } else if ($jsonFinalResponse['status'] === 'failed') {
-                break;
+                return $this->errorResponse(500);
+
             } else {
-                usleep(1);
+                $retryCount++;
             }
         }
 
-        // upload $renewedImage to B2.
-        // use url from b2 instead of replicate CDN
-        // update database record once completed
+        // Check if the maximum number of retries has been reached
+        if (!$renewedImage) {
+            return response()->json(['error' => 'Failed to restore image: maximum number of retries reached', 'code' => 500]);
+        }
 
-        return $renewedImage;
+        // Upload $renewedImage to B2.
+        // Use URL from B2 instead of Replicate CDN.
+        // Update database record once completed.
+
+        return response()->json(['' => '', 'renewedImage' => $renewedImage, 'code' => 200]);
     }
+
+    private function errorResponse($code): \Illuminate\Http\JsonResponse
+    {
+        $message = "There was an error processing this image, please try again or contact support.";
+        return response()->json(['success' => false, 'error' => $message, 'code' => $code]);
+    }
+
+
 }
