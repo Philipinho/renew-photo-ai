@@ -14,19 +14,20 @@ return new class extends Migration
 
         Schema::create('results', function (Blueprint $table) {
             $table->id();
+            $table->uuid();
             $table->foreignId('user_id')->nullable();
-            $table->string('replicate_id');
+            $table->string('input_image_url')->nullable();
+            $table->string('processed_image_url')->nullable();
             $table->integer('cost');
-            $table->json('input');
-            $table->string('output')->nullable();
-            $table->string('image_url')->nullable();
+            $table->string('replicate_id');
             $table->string('replicate_status', 50)->nullable();
-            $table->timestamp('replicate_created_at')->nullable();
-            $table->timestamp('started_at')->nullable();
-            $table->timestamp('completed_at')->nullable();
-            $table->mediumText('error')->nullable();
+            $table->json('replicate_input')->nullable();
+            $table->string('replicate_output')->nullable();
+            $table->mediumText('replicate_error')->nullable();
+            $table->timestamp('replicate_started_at')->nullable();
+            $table->timestamp('replicate_completed_at')->nullable();
+            $table->string('status', 50)->nullable();
             $table->string('version')->nullable();
-            $table->json('replicate_payload')->nullable();
 
             $table->timestamps();
         });
