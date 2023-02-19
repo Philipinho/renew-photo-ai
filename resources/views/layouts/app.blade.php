@@ -13,6 +13,14 @@
 
         <script src="https://unpkg.com/dropzone@6.0.0-beta.1/dist/dropzone-min.js"></script>
         <link href="https://unpkg.com/dropzone@6.0.0-beta.1/dist/dropzone.css" rel="stylesheet" type="text/css" />
+        <script
+            defer
+            src="https://unpkg.com/img-comparison-slider@7/dist/index.js"
+        ></script>
+        <link
+            rel="stylesheet"
+            href="https://unpkg.com/img-comparison-slider@7/dist/styles.css"
+        />
 
         <!-- Scripts -->
         @vite(['resources/css/app.css', 'resources/js/app.js'])
