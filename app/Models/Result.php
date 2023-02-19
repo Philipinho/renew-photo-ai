@@ -8,11 +8,11 @@ use Illuminate\Database\Eloquent\Model;
 class Result extends Model
 {
     use HasFactory;
-
     protected $fillable = [
-        'user_id', 'replicate_id', 'cost', 'input', 'output', 'image_url',
-        'replicate_status', 'replicate_created_at', 'started_at', 'completed_at',
-        'error', 'version', 'replicate_payload'
+        'user_id', 'input_image_url', 'processed_image_url', 'cost',
+        'replicate_id', 'replicate_status', 'replicate_input', 'replicate_output',
+        'replicate_error', 'replicate_started_at', 'replicate_completed_at',
+        'status', 'version',
     ];
 
 
