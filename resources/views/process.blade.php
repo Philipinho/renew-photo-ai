@@ -2,7 +2,7 @@
 
 
     <div>
-        @livewire('image-upload')
+        <livewire:image-handler />
     </div>
 
 

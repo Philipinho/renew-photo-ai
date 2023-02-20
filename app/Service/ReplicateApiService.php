@@ -12,7 +12,7 @@ class ReplicateApiService
     public function startImageRenewal(string $imageUrl)
     {
         try {
-            $startResponse = Http::withHeaders([
+            $response = Http::withHeaders([
                 'Content-Type' => 'application/json',
                 'Authorization' => 'Token ' . config('replicate.api_key')
             ])->post('https://api.replicate.com/v1/predictions', [
@@ -28,16 +28,9 @@ class ReplicateApiService
             throw new \Exception("Failed to start image renewal: " . $e->getMessage());
         }
 
-        // Check for API errors
-        $jsonStartResponse = $startResponse->json();
-
-        if (isset($jsonStartResponse['error'])) {
-            throw new \Exception("Failed to start image renewal: " . $jsonStartResponse['error']);
-        }
-
         // Save to database
 
-        return $jsonStartResponse['urls']['get'];
+        return $response['urls']['get'];
     }
 
 
@@ -46,31 +39,32 @@ class ReplicateApiService
         $renewedImage = null;
         $retryCount = 0;
         $maxRetries = 8;
+        $input_url = null;
 
         while (!$renewedImage && $retryCount < $maxRetries) {
             try {
-                $finalResponse = Http::withHeaders([
+                $response = Http::withHeaders([
                     'Content-Type' => 'application/json',
                     'Authorization' => 'Token ' . config('replicate.api_key')
                 ])->get($endpointUrl);
             } catch (\Exception $e) {
                 // Handle exception
                 // log errors to admin
-                // $jsonFinalResponse['error']
+                // $response['error']
                 return $this->errorResponse($e->getCode());
             }
 
             // Check for HTTP errors
-            if ($finalResponse->failed()) {
-                return $this->errorResponse($finalResponse->status());
+            if ($response->failed()) {
+                return $this->errorResponse($response->status());
             }
 
-            $jsonFinalResponse = $finalResponse->json();
+            $input_url = $response['input']['img'];
 
-            if ($jsonFinalResponse['status'] === 'succeeded') {
-                $renewedImage = $jsonFinalResponse['output'];
+            if ($response['status'] === 'succeeded') {
+                $renewedImage = $response['output'];
 
-            } else if ($jsonFinalResponse['status'] === 'failed') {
+            } else if ($response['status'] === 'failed') {
                 return $this->errorResponse(500);
 
             } else {
@@ -84,10 +78,12 @@ class ReplicateApiService
         }
 
         // Upload $renewedImage to B2.
-        // Use URL from B2 instead of Replicate CDN.
+        // Use output URL from B2 instead of Replicate CDN.
         // Update database record once completed.
 
-        return response()->json(['' => '', 'renewedImage' => $renewedImage, 'code' => 200]);
+        return response()
+            ->json(['success' => true, 'input_image_url' => $input_url,
+                'output_image_url' => $renewedImage, 'code' => 200]);
     }
 
     private function errorResponse($code): \Illuminate\Http\JsonResponse
