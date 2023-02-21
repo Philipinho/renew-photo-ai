@@ -1,9 +1,7 @@
 <x-app-layout>
 
-
     <div>
-        <livewire:image-handler />
+        <livewire:image-handler/>
     </div>
-
 
 </x-app-layout>
