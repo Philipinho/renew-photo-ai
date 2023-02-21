@@ -12,7 +12,7 @@ return new class extends Migration
     public function up(): void
     {
 
-        Schema::create('results', function (Blueprint $table) {
+        Schema::create('image_results', function (Blueprint $table) {
             $table->id();
             $table->uuid();
             $table->foreignId('user_id')->nullable();
@@ -20,9 +20,9 @@ return new class extends Migration
             $table->string('processed_image_url')->nullable();
             $table->integer('cost');
             $table->string('replicate_id');
-            $table->string('replicate_status', 50)->nullable();
             $table->json('replicate_input')->nullable();
             $table->string('replicate_output')->nullable();
+            $table->string('replicate_status', 50)->nullable();
             $table->mediumText('replicate_error')->nullable();
             $table->timestamp('replicate_started_at')->nullable();
             $table->timestamp('replicate_completed_at')->nullable();
