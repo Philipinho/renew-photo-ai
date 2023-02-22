@@ -16,20 +16,19 @@ return new class extends Migration
             $table->id();
             $table->uuid();
             $table->foreignId('user_id')->nullable();
-            $table->string('input_image_url')->nullable();
-            $table->string('processed_image_url')->nullable();
             $table->integer('cost');
             $table->string('replicate_id');
-            $table->json('replicate_input')->nullable();
-            $table->string('replicate_output')->nullable();
-            $table->string('replicate_status', 50)->nullable();
-            $table->mediumText('replicate_error')->nullable();
-            $table->timestamp('replicate_started_at')->nullable();
-            $table->timestamp('replicate_completed_at')->nullable();
-            $table->string('status', 50)->nullable();
+            $table->string('url');
+            $table->string('input_image_url')->nullable();
+            $table->string('output_image_url')->nullable();
+            $table->mediumText('error')->nullable();
             $table->string('version')->nullable();
-
+            $table->timestamp('started_at')->nullable();
+            $table->timestamp('completed_at')->nullable();
+            $table->string('predict_time', 50)->nullable();
+            $table->string('status', 50)->nullable();
             $table->timestamps();
+
         });
 
 
