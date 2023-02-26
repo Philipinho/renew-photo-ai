@@ -14,9 +14,9 @@ return new class extends Migration
 
         Schema::create('image_results', function (Blueprint $table) {
             $table->id();
-            $table->uuid();
+            $table->uuid()->unique();
             $table->foreignId('user_id')->nullable();
-            $table->integer('cost');
+            $table->integer('cost')->nullable();
             $table->string('replicate_id');
             $table->string('url');
             $table->string('input_image_url')->nullable();

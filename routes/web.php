@@ -33,4 +33,6 @@ Route::get('/process', [ProcessController::class, 'show'])->name('process.show')
 
 Route::post('/process/upload', [ProcessController::class, 'uploadImage'])->name('process.upload');
 
+Route::get('/result', [ProcessController::class, 'result'])->name('process.result');
+
 require __DIR__.'/auth.php';

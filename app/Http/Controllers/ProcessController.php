@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\ImageResult;
 use Illuminate\Http\Request;
 
 class ProcessController extends Controller
@@ -16,7 +17,7 @@ class ProcessController extends Controller
         // TODO: upload image to B2
 
         $request->validate([
-            'file' => 'required|image|mimes:jpeg,png,jpg,gif,svg,webp|max:2048',
+            'file' => 'required|image|mimes:jpeg,png,jpg,svg,webp|max:2048',
         ]);
 
         $image = $request->file('file');
@@ -27,4 +28,17 @@ class ProcessController extends Controller
         //'http:/images/'.$imageName
         return response()->json(['success'=> true, 'image' => $imageName, 'url' => $url]);
     }
+
+    public function result(Request $request)
+    {
+        $imageResult = ImageResult::where('uuid', $request->uuid)->firstOrFail();
+
+      //  if ($imageResult->status === 'starting' || $imageResult->status === 'processing') {
+
+           // return redirect()->route('process')->with('error', $imageResult->error);
+      //  }
+
+        return view('result', ['result' => $imageResult]);
+    }
+
 }

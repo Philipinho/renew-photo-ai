@@ -2,14 +2,18 @@
 
 namespace App\Service;
 
+use App\Models\ImageResult;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Str;
+use function Pest\Laravel\json;
 
 class ReplicateApiService
 {
     /**
      * @throws \Exception
      */
-    public function startImageRenewal(string $imageUrl)
+    public function startImageRenewal(string $imageUrl): ImageResult
     {
         try {
             $response = Http::withHeaders([
@@ -27,69 +31,107 @@ class ReplicateApiService
             // Handle exception
             throw new \Exception("Failed to start image renewal: " . $e->getMessage());
         }
+        // handle 429 ratelimit status code
+        if ($response->status() === 429) {
+            throw new \Exception("Failed to start image renewal: " . $response->json()['error']);
+        }
 
-        // Save to database
+        $imageResult = ImageResult::create([
+            'user_id' => auth()->user()->id ?? NULL,
+            'uuid' => Str::orderedUuid(),
+            'replicate_id' => $response['id'],
+            'url' => $response['urls']['get'],
+            'input_image_url' => $response['input']['img'],
+            'error' => $response['error'],
+            'version' => config('replicate.version'),
+            'status' => $response['status'],
+        ]);
 
-        return $response['urls']['get'];
+        return $imageResult;
     }
 
 
-    public function checkImageRenewalStatus(string $endpointUrl)
+    public function checkImageRenewalStatus(string $replicateId)
     {
+        $imageResult = ImageResult::where('replicate_id', $replicateId)->firstOrFail();
+
+        $tempStatuses = ['starting', 'processing'];
+
+        if (!in_array($imageResult->status, $tempStatuses)) {
+            //return response()
+               // ->json(['success' => true, 'input_image_url' => $imageResult->input_image_url,
+               //     'output_image_url' => $imageResult->output_image_url, 'code' => 200]);
+            return response()->json($imageResult);
+        }
+
         $renewedImage = null;
         $retryCount = 0;
-        $maxRetries = 8;
-        $input_url = null;
+        $maxRetries = 10;
+        $input_url = $imageResult->input_image_url;
 
         while (!$renewedImage && $retryCount < $maxRetries) {
             try {
                 $response = Http::withHeaders([
                     'Content-Type' => 'application/json',
                     'Authorization' => 'Token ' . config('replicate.api_key')
-                ])->get($endpointUrl);
+                ])->get($imageResult->url);
             } catch (\Exception $e) {
-                // Handle exception
                 // log errors to admin
                 // $response['error']
-                return $this->errorResponse($e->getCode());
+                //return $this->errorResponse($e->getCode());
+                break;
             }
 
             // Check for HTTP errors
             if ($response->failed()) {
-                return $this->errorResponse($response->status());
+                break;
             }
-
-            $input_url = $response['input']['img'];
 
             if ($response['status'] === 'succeeded') {
                 $renewedImage = $response['output'];
+                break;
 
             } else if ($response['status'] === 'failed') {
-                return $this->errorResponse(500);
-
+                break;
+                //return $this->errorResponse(500);
             } else {
+                sleep(1);
                 $retryCount++;
             }
-        }
-
-        // Check if the maximum number of retries has been reached
-        if (!$renewedImage) {
-            return response()->json(['error' => 'Failed to restore image: maximum number of retries reached', 'code' => 500]);
         }
 
         // Upload $renewedImage to B2.
         // Use output URL from B2 instead of Replicate CDN.
         // Update database record once completed.
 
-        return response()
-            ->json(['success' => true, 'input_image_url' => $input_url,
-                'output_image_url' => $renewedImage, 'code' => 200]);
+        if (empty($response)) {
+            //update status to failed
+            $imageResult->update([
+                'status' => 'failed',
+            ]);
+            return $this->errorResponse();
+        }
+
+        $imageResult->update([
+            'output_image_url' => $renewedImage,
+            'status' => $response['status'],
+            'started_at' => $response['started_at'],
+            'completed_at' => $response['completed_at'],
+            'predict_time' => $response['metric']['predict_time'],
+            'error' => $response['error'],
+        ]);
+
+        return response()->json($imageResult);
+
+        //return response()
+          //  ->json(['success' => true, 'input_image_url' => $input_url,
+            //    'output_image_url' => $renewedImage, 'code' => 200]);
     }
 
-    private function errorResponse($code): \Illuminate\Http\JsonResponse
+    private function errorResponse(): JsonResponse
     {
         $message = "There was an error processing this image, please try again or contact support.";
-        return response()->json(['success' => false, 'error' => $message, 'code' => $code]);
+        return response()->json(['success' => false, 'message' => $message, 'code' => 500]);
     }
 
 
