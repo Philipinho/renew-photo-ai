@@ -6,7 +6,6 @@ use App\Models\ImageResult;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Str;
-use function Pest\Laravel\json;
 
 class ReplicateApiService
 {
@@ -51,22 +50,19 @@ class ReplicateApiService
     }
 
 
-    public function checkImageRenewalStatus(string $replicateId)
+    public function checkImageRenewalStatus(string $replicateId): ImageResult
     {
         $imageResult = ImageResult::where('replicate_id', $replicateId)->firstOrFail();
 
         $tempStatuses = ['starting', 'processing'];
 
         if (!in_array($imageResult->status, $tempStatuses)) {
-            //return response()
-               // ->json(['success' => true, 'input_image_url' => $imageResult->input_image_url,
-               //     'output_image_url' => $imageResult->output_image_url, 'code' => 200]);
-            return response()->json($imageResult);
+            return $imageResult;
         }
 
         $renewedImage = null;
         $retryCount = 0;
-        $maxRetries = 10;
+        $maxRetries = 5;
         $input_url = $imageResult->input_image_url;
 
         while (!$renewedImage && $retryCount < $maxRetries) {
@@ -76,27 +72,24 @@ class ReplicateApiService
                     'Authorization' => 'Token ' . config('replicate.api_key')
                 ])->get($imageResult->url);
             } catch (\Exception $e) {
-                // log errors to admin
-                // $response['error']
-                //return $this->errorResponse($e->getCode());
-                break;
+                // log error
+               // break;
             }
 
             // Check for HTTP errors
             if ($response->failed()) {
+                // log error
                 break;
             }
-
             if ($response['status'] === 'succeeded') {
                 $renewedImage = $response['output'];
                 break;
 
             } else if ($response['status'] === 'failed') {
                 break;
-                //return $this->errorResponse(500);
             } else {
-                sleep(1);
                 $retryCount++;
+                sleep(1);
             }
         }
 
@@ -109,7 +102,8 @@ class ReplicateApiService
             $imageResult->update([
                 'status' => 'failed',
             ]);
-            return $this->errorResponse();
+
+            return $imageResult;
         }
 
         $imageResult->update([
@@ -117,15 +111,12 @@ class ReplicateApiService
             'status' => $response['status'],
             'started_at' => $response['started_at'],
             'completed_at' => $response['completed_at'],
-            'predict_time' => $response['metric']['predict_time'],
+            'predict_time' => $response['metrics']['predict_time'],
+            'logs' => $response['logs'],
             'error' => $response['error'],
         ]);
 
-        return response()->json($imageResult);
-
-        //return response()
-          //  ->json(['success' => true, 'input_image_url' => $input_url,
-            //    'output_image_url' => $renewedImage, 'code' => 200]);
+        return $imageResult;
     }
 
     private function errorResponse(): JsonResponse

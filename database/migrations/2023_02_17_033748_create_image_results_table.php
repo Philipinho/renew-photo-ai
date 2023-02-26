@@ -21,10 +21,12 @@ return new class extends Migration
             $table->string('url');
             $table->string('input_image_url')->nullable();
             $table->string('output_image_url')->nullable();
-            $table->mediumText('error')->nullable();
+            $table->text('logs')->nullable();
+            $table->text('error')->nullable();
             $table->string('version')->nullable();
-            $table->timestamp('started_at')->nullable();
-            $table->timestamp('completed_at')->nullable();
+            $table->text('error')->nullable();
+            $table->string('started_at')->nullable();
+            $table->string('completed_at')->nullable();
             $table->string('predict_time', 50)->nullable();
             $table->string('status', 50)->nullable();
             $table->timestamps();

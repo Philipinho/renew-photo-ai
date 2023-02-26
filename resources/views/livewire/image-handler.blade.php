@@ -79,7 +79,7 @@
             // We should show a loading screen
             console.log("imageProcessed");
             console.log(data);
-            //dropzone.removeAllFiles();
+            dropzone.removeAllFiles();
 
             // Hide the form
             // document.querySelector('#upload_area').style.display = 'none';

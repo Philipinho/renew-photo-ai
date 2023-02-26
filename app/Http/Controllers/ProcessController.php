@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\ImageResult;
+use App\Service\ReplicateApiService;
 use Illuminate\Http\Request;
 
 class ProcessController extends Controller
@@ -33,10 +34,10 @@ class ProcessController extends Controller
     {
         $imageResult = ImageResult::where('uuid', $request->uuid)->firstOrFail();
 
-      //  if ($imageResult->status === 'starting' || $imageResult->status === 'processing') {
-
-           // return redirect()->route('process')->with('error', $imageResult->error);
-      //  }
+      if (!($imageResult->status === 'succeeded' || $imageResult->status === 'failed')) {
+          $replicateApiService = new ReplicateApiService();
+          $imageResult = $replicateApiService->checkImageRenewalStatus($imageResult->replicate_id);
+      }
 
         return view('result', ['result' => $imageResult]);
     }
