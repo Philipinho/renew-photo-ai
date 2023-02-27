@@ -2,7 +2,7 @@
 
 namespace App\Enums;
 
-enum PredictionType
+enum PredictionType: string
 {
     const RESTORE = "restore";
 }

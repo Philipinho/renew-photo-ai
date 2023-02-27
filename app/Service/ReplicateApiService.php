@@ -6,6 +6,8 @@ use App\Enums\PredictionType;
 use App\Models\PredictionResult;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
 class ReplicateApiService
@@ -64,7 +66,7 @@ class ReplicateApiService
 
         $restoredImage = null;
         $retryCount = 0;
-        $maxRetries = 5;
+        $maxRetries = 8;
         $input_url = $predictionResult->input_image_url;
 
         while (!$restoredImage && $retryCount < $maxRetries) {
@@ -95,10 +97,6 @@ class ReplicateApiService
             }
         }
 
-        // Upload $restoredImage to B2.
-        // Use output URL from B2 instead of Replicate CDN.
-        // Update database record once completed.
-
         if (empty($response)) {
             //update status to failed
             $predictionResult->update([
@@ -108,8 +106,23 @@ class ReplicateApiService
             return $predictionResult;
         }
 
+        $extension = pathinfo($restoredImage, PATHINFO_EXTENSION);
+
+        $filename = time() ."-" . uniqid() . '-output' . "." . $extension;
+        $filePath = 'output/' . $filename;
+
+        Log::INFO("FN: " . $filename);
+        Log::INFO("Filepath: " . $filePath);
+        Log::INFO("RI: " . $restoredImage);
+
+        Storage::disk('s3')->put($filePath, file_get_contents($restoredImage));
+
+        $imageURL = config('filesystems.disks.s3.url') . "/" . $filePath;
+
+        Log::INFO("OUTPUT: " . $imageURL);
+
         $predictionResult->update([
-            'output_image_url' => $restoredImage,
+            'output_image_url' => $imageURL,
             'status' => $response['status'],
             'started_at' => $response['started_at'],
             'completed_at' => $response['completed_at'],

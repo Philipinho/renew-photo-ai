@@ -26,7 +26,7 @@ class ImageHandler extends Component
         $this->loading = true;
 
         $prediction = $replicateApiService->startImageRestoration($imageUrl);
-        sleep(2);
+        sleep(1);
         $prediction = $replicateApiService->checkImageRestorationStatus($prediction->replicate_id);
 
         //$data = '{"success":true,"input_image_url":"https://i.ibb.co/QNqWjyZ/E-NQc-Jc-XEAch-Po-G.jpg","output_image_url":"https://i.ibb.co/QNqWjyZ/E-NQc-Jc-XEAch-Po-G.jpg","code":200}';

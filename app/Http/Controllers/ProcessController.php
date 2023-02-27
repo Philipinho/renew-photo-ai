@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\PredictionResult;
 use App\Service\ReplicateApiService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
 
 class ProcessController extends Controller
 {
@@ -18,16 +20,22 @@ class ProcessController extends Controller
         // TODO: upload image to B2
 
         $request->validate([
-            'file' => 'required|image|mimes:jpeg,png,jpg,svg,webp|max:2048',
+            'file' => 'required|image|mimes:jpeg,png,jpg,svg,webp|max:5048',
         ]);
 
         $image = $request->file('file');
-        $imageName = $image->getClientOriginalName();
-        $image->move(public_path('images'), $imageName);
 
-        $url = "https://i.ibb.co/QNqWjyZ/E-NQc-Jc-XEAch-Po-G.jpg";
-        //'http:/images/'.$imageName
-        return response()->json(['success'=> true, 'image' => $imageName, 'url' => $url]);
+        $imageExtension = $image->getClientOriginalExtension();
+        $imageName = time() ."-" . uniqid() . '-input' . "." . $imageExtension;
+
+        $filePath = 'input/' . $imageName;
+
+        Storage::disk('s3')->put($filePath, file_get_contents($image));
+
+        $imageURL = config('filesystems.disks.s3.url') . "/" . $filePath;
+        Log::info($imageURL);
+
+        return response()->json(['success'=> true, 'image' => $imageName, 'image_url' => $imageURL]);
     }
 
     public function result(Request $request)

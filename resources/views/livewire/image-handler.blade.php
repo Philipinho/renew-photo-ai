@@ -69,7 +69,7 @@
                     console.log("Uploaded");
                     console.log(response);
 
-                    Livewire.emit('handleImage', response.url);
+                    Livewire.emit('handleImage', response.image_url);
                 });
             }
         });

@@ -19,6 +19,7 @@ class PredictionResult extends Model
         'output_image_url',
         'error',
         'version',
+        'type',
         'started_at',
         'completed_at',
         'predict_time',

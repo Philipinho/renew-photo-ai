@@ -54,6 +54,9 @@ return [
             'endpoint' => env('AWS_ENDPOINT'),
             'use_path_style_endpoint' => env('AWS_USE_PATH_STYLE_ENDPOINT', false),
             'throw' => false,
+            'options' => [
+                'ACL' => '', // it will not work on backblaze public bucket if you don't set this to empty string
+            ]
         ],
 
     ],
