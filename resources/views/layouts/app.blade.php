@@ -22,8 +22,10 @@
 
         <livewire:styles />
     </head>
-    <body class="font-sans antialiased">
-        <div class="min-h-screen bg-gray-100 dark:bg-gray-900">
+    <body class="font-sans antialiased bg-white text-gray-900 tracking-tight">
+        <div class="flex flex-col min-h-screen overflow-hidden">
+
+            @include('layouts.header')
 
             {{--
             @include('layouts.navigation')
@@ -39,7 +41,7 @@
             --}}
 
             <!-- Page Content -->
-            <main>
+            <main class="grow">
                 {{ $slot }}
             </main>
         </div>

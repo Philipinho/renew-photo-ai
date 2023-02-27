@@ -1,29 +1,36 @@
 <x-app-layout>
 
-    <div class="bg-white px-4 py-12">
-        <div class="flex justify-center sm:flex-row flex-col">
+    <section>
 
-            <div class="mt-4 mx-3 relative">
-                <h3 class="text-xl text-center">Input</h3>
-                <img src="{{ $result->input_image_url }}" class="rounded-2xl w-[475px]" loading="lazy">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6">
+
+            <div class="pt-32 pb-12 md:pt-40 md:pb-20">
+                <div class="flex justify-center sm:flex-row flex-col">
+
+                    <div class="mt-4 mx-3 relative">
+                        <h3 class="text-xl text-center">Input</h3>
+                        <img src="{{ $result->input_image_url }}" class="rounded-2xl w-[475px]" loading="lazy">
+                    </div>
+
+                    <div class="mt-4 mx-1 relative">
+                        <h3 class="text-xl text-center">Output</h3>
+                        <img src="{{ $result->output_image_url }}" class="rounded-2xl w-[475px]" loading="lazy">
+                    </div>
+
+                </div>
+
+                <div class="mt-8 mx-auto text-center">
+                    <x-primary-button class="bg-emerald-600 hover:bg-emerald-700">
+                        <a href="{{ route('process.show') }}" class="text-xl">
+                            Try another image
+                        </a>
+                    </x-primary-button>
+                </div>
+
             </div>
-
-            <div class="mt-4 mx-1 relative">
-                <h3 class="text-xl text-center">Output</h3>
-                <img src="{{ $result->output_image_url }}" class="rounded-2xl w-[475px]" loading="lazy">
-            </div>
-
         </div>
 
-        <div class="mt-5 mx-auto text-center">
-            <x-primary-button class="bg-emerald-600 hover:bg-emerald-700 font-medium">
-                <a href="{{ route('process.show') }}">
-                    Try another image
-                </a>
-            </x-primary-button>
-        </div>
-
-    </div>
+    </section>
 
     <!--
     <div id="status">Process in progress...</div>
