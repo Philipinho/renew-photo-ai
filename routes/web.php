@@ -35,4 +35,7 @@ Route::post('/process/upload', [ProcessController::class, 'uploadImage'])->name(
 
 Route::get('/result', [ProcessController::class, 'result'])->name('process.result');
 
+// get status of the process
+Route::get('/status', [ProcessController::class, 'getStatus'])->name('process.status');
+
 require __DIR__.'/auth.php';

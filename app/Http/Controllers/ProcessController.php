@@ -26,7 +26,7 @@ class ProcessController extends Controller
         $image = $request->file('file');
 
         $imageExtension = $image->getClientOriginalExtension();
-        $imageName = time() ."-" . uniqid() . '-input' . "." . $imageExtension;
+        $imageName = time() . "-" . uniqid() . '-input' . "." . $imageExtension;
 
         $filePath = 'input/' . $imageName;
 
@@ -35,19 +35,35 @@ class ProcessController extends Controller
         $imageURL = config('filesystems.disks.s3.url') . "/" . $filePath;
         Log::info($imageURL);
 
-        return response()->json(['success'=> true, 'image' => $imageName, 'image_url' => $imageURL]);
+        return response()->json(['success' => true, 'image' => $imageName, 'image_url' => $imageURL]);
     }
 
     public function result(Request $request)
     {
         $predictionResult = PredictionResult::where('uuid', $request->uuid)->firstOrFail();
 
-      if (!($predictionResult->status === 'succeeded' || $predictionResult->status === 'failed')) {
-          $replicateApiService = new ReplicateApiService();
-          $predictionResult = $replicateApiService->checkImageRestorationStatus($predictionResult->replicate_id);
-      }
+        // TODO: this should be a dispatch job
+       // if (!($predictionResult->status === 'succeeded' || $predictionResult->status === 'failed')) {
+         //   $replicateApiService = new ReplicateApiService();
+           // $predictionResult = $replicateApiService->checkImageRestorationStatus($predictionResult->replicate_id);
+        //}
 
         return view('result', ['result' => $predictionResult]);
     }
 
+    public function getStatus(Request $request)
+    {
+        $status = PredictionResult::where('uuid', $request->uuid)->value('status');
+
+        if (!$status){
+            // return json response with error code with http status code 404
+            return response()->json([
+                'status' => 'result not found',
+            ], 404);
+        }
+
+        return response()->json([
+            'status' => $status,
+        ]);
+    }
 }

@@ -76,6 +76,7 @@ class ReplicateApiService
                     'Authorization' => 'Token ' . config('replicate.api_key')
                 ])->get($predictionResult->url);
             } catch (\Exception $e) {
+                Log::error("Failed to restore image: ". $replicateId . " - " . $e->getMessage());
                 // log error
                // break;
             }
@@ -111,8 +112,6 @@ class ReplicateApiService
         $filename = time() ."-" . uniqid() . '-output' . "." . $extension;
         $filePath = 'output/' . $filename;
 
-        Log::INFO("FN: " . $filename);
-        Log::INFO("Filepath: " . $filePath);
         Log::INFO("RI: " . $restoredImage);
 
         Storage::disk('s3')->put($filePath, file_get_contents($restoredImage));
