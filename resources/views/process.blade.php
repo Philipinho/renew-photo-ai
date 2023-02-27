@@ -1,7 +1,11 @@
 <x-app-layout>
 
-    <div>
+    <section>
+
+        <div class="max-w-6xl mx-auto px-4 sm:px-6">
+
         <livewire:image-handler/>
-    </div>
+        </div>
+    </section>
 
 </x-app-layout>

@@ -44,8 +44,12 @@
             <main class="grow">
                 {{ $slot }}
             </main>
+
+            @include('layouts.footer')
         </div>
 
         <livewire:scripts />
     </body>
+
+
 </html>

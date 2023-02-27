@@ -1,6 +1,15 @@
 <div>
 
-    <div class="bg-white px-4 py-12">
+    <div class="pt-32 pb-12 md:pt-40 md:pb-20">
+
+        <div class="max-w-3xl mx-auto text-center pb-12 md:pb-16">
+            <h1 class="text-3xl font-semibold mb-4">Restore photo</h1>
+            <p class="text-xl text-gray-600">
+                 Select your prefered image to restore and see the magic of AI.
+            </p>
+        </div>
+
+
         <div class="mx-auto max-w-lg">
             <form
                 class="dropzone relative block w-full rounded-lg border-2 border-dashed border-gray-300 p-12 text-center hover:border-emerald-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
@@ -8,17 +17,6 @@
             </form>
         </div>
 
-        <div class="flex justify-center sm:flex-row flex-col">
-
-            <div class="mt-4 mx-3">
-                <img src="https://i.ibb.co/0QRwtd8/out.jpg" class="rounded-2xl w-[475px]">
-            </div>
-
-            <div class="mt-4 mx-1">
-                <img src="https://i.ibb.co/0QRwtd8/out.jpg" class="rounded-2xl w-[475px]">
-            </div>
-
-        </div>
     </div>
 
     <div wire:loading.delay>
