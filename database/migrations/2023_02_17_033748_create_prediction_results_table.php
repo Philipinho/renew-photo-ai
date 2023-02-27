@@ -12,7 +12,7 @@ return new class extends Migration
     public function up(): void
     {
 
-        Schema::create('image_results', function (Blueprint $table) {
+        Schema::create('prediction_results', function (Blueprint $table) {
             $table->id();
             $table->uuid()->unique();
             $table->foreignId('user_id')->nullable();
@@ -24,7 +24,7 @@ return new class extends Migration
             $table->text('logs')->nullable();
             $table->text('error')->nullable();
             $table->string('version')->nullable();
-            $table->text('error')->nullable();
+            $table->text('type')->nullable();
             $table->string('started_at')->nullable();
             $table->string('completed_at')->nullable();
             $table->string('predict_time', 50)->nullable();
@@ -41,6 +41,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('replicate_jobs');
+        Schema::dropIfExists('prediction_results');
     }
 };

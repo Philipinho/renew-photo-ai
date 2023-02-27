@@ -2,7 +2,8 @@
 
 namespace App\Service;
 
-use App\Models\ImageResult;
+use App\Enums\PredictionType;
+use App\Models\PredictionResult;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Str;
@@ -12,7 +13,7 @@ class ReplicateApiService
     /**
      * @throws \Exception
      */
-    public function startImageRenewal(string $imageUrl): ImageResult
+    public function startImageRestoration(string $imageUrl): PredictionResult
     {
         try {
             $response = Http::withHeaders([
@@ -35,7 +36,7 @@ class ReplicateApiService
             throw new \Exception("Failed to start image renewal: " . $response->json()['error']);
         }
 
-        $imageResult = ImageResult::create([
+        $predictionResult = PredictionResult::create([
             'user_id' => auth()->user()->id ?? NULL,
             'uuid' => Str::orderedUuid(),
             'replicate_id' => $response['id'],
@@ -43,34 +44,35 @@ class ReplicateApiService
             'input_image_url' => $response['input']['img'],
             'error' => $response['error'],
             'version' => config('replicate.version'),
+            'type' => PredictionType::RESTORE,
             'status' => $response['status'],
         ]);
 
-        return $imageResult;
+        return $predictionResult;
     }
 
 
-    public function checkImageRenewalStatus(string $replicateId): ImageResult
+    public function checkImageRestorationStatus(string $replicateId): PredictionResult
     {
-        $imageResult = ImageResult::where('replicate_id', $replicateId)->firstOrFail();
+        $predictionResult = PredictionResult::where('replicate_id', $replicateId)->firstOrFail();
 
         $tempStatuses = ['starting', 'processing'];
 
-        if (!in_array($imageResult->status, $tempStatuses)) {
-            return $imageResult;
+        if (!in_array($predictionResult->status, $tempStatuses)) {
+            return $predictionResult;
         }
 
-        $renewedImage = null;
+        $restoredImage = null;
         $retryCount = 0;
         $maxRetries = 5;
-        $input_url = $imageResult->input_image_url;
+        $input_url = $predictionResult->input_image_url;
 
-        while (!$renewedImage && $retryCount < $maxRetries) {
+        while (!$restoredImage && $retryCount < $maxRetries) {
             try {
                 $response = Http::withHeaders([
                     'Content-Type' => 'application/json',
                     'Authorization' => 'Token ' . config('replicate.api_key')
-                ])->get($imageResult->url);
+                ])->get($predictionResult->url);
             } catch (\Exception $e) {
                 // log error
                // break;
@@ -82,7 +84,7 @@ class ReplicateApiService
                 break;
             }
             if ($response['status'] === 'succeeded') {
-                $renewedImage = $response['output'];
+                $restoredImage = $response['output'];
                 break;
 
             } else if ($response['status'] === 'failed') {
@@ -93,21 +95,21 @@ class ReplicateApiService
             }
         }
 
-        // Upload $renewedImage to B2.
+        // Upload $restoredImage to B2.
         // Use output URL from B2 instead of Replicate CDN.
         // Update database record once completed.
 
         if (empty($response)) {
             //update status to failed
-            $imageResult->update([
+            $predictionResult->update([
                 'status' => 'failed',
             ]);
 
-            return $imageResult;
+            return $predictionResult;
         }
 
-        $imageResult->update([
-            'output_image_url' => $renewedImage,
+        $predictionResult->update([
+            'output_image_url' => $restoredImage,
             'status' => $response['status'],
             'started_at' => $response['started_at'],
             'completed_at' => $response['completed_at'],
@@ -116,7 +118,7 @@ class ReplicateApiService
             'error' => $response['error'],
         ]);
 
-        return $imageResult;
+        return $predictionResult;
     }
 
     private function errorResponse(): JsonResponse

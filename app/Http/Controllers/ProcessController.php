@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\ImageResult;
+use App\Models\PredictionResult;
 use App\Service\ReplicateApiService;
 use Illuminate\Http\Request;
 
@@ -32,14 +32,14 @@ class ProcessController extends Controller
 
     public function result(Request $request)
     {
-        $imageResult = ImageResult::where('uuid', $request->uuid)->firstOrFail();
+        $predictionResult = PredictionResult::where('uuid', $request->uuid)->firstOrFail();
 
-      if (!($imageResult->status === 'succeeded' || $imageResult->status === 'failed')) {
+      if (!($predictionResult->status === 'succeeded' || $predictionResult->status === 'failed')) {
           $replicateApiService = new ReplicateApiService();
-          $imageResult = $replicateApiService->checkImageRenewalStatus($imageResult->replicate_id);
+          $predictionResult = $replicateApiService->checkImageRestorationStatus($predictionResult->replicate_id);
       }
 
-        return view('result', ['result' => $imageResult]);
+        return view('result', ['result' => $predictionResult]);
     }
 
 }
