@@ -69,21 +69,22 @@ class ReplicateApiService
         $maxRetries = 8;
         $input_url = $predictionResult->input_image_url;
 
-        while (!$restoredImage && $retryCount < $maxRetries) {
+        while (!$restoredImage) {
             try {
                 $response = Http::withHeaders([
                     'Content-Type' => 'application/json',
                     'Authorization' => 'Token ' . config('replicate.api_key')
                 ])->get($predictionResult->url);
             } catch (\Exception $e) {
-                Log::error("Failed to restore image: ". $replicateId . " - " . $e->getMessage());
+                Log::error("Failed to restore image: " . $replicateId . " - " . $e->getMessage());
                 // log error
-               // break;
+                // break;
             }
 
             // Check for HTTP errors
             if ($response->failed()) {
                 // log error
+                // check for 429 ratelimit status code and handle it
                 break;
             }
             if ($response['status'] === 'succeeded') {
@@ -93,23 +94,21 @@ class ReplicateApiService
             } else if ($response['status'] === 'failed') {
                 break;
             } else {
-                $retryCount++;
+                //$retryCount++;
                 sleep(1);
             }
         }
 
-        if (empty($response)) {
-            //update status to failed
+        if (!isset($response) && is_null($restoredImage)) {
             $predictionResult->update([
                 'status' => 'failed',
             ]);
-
             return $predictionResult;
         }
 
         $extension = pathinfo($restoredImage, PATHINFO_EXTENSION);
 
-        $filename = time() ."-" . uniqid() . '-output' . "." . $extension;
+        $filename = time() . "-" . uniqid() . '-output' . "." . $extension;
         $filePath = 'output/' . $filename;
 
         Log::INFO("RI: " . $restoredImage);
