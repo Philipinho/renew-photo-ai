@@ -41,10 +41,21 @@
 
                 <div class="mt-5 text-center" :class="preview == true ? 'hidden' : ''">
 
-                    <img-comparison-slider>
-                        <img class="rounded-2xl w-[475px]" slot="first" src="{{ $result->input_image_url }}"/>
-                        <img class="rounded-2xl w-[475px]" slot="second" src="{{ $result->output_image_url }}"/>
+                    <img-comparison-slider class="relative" tabindex="0">
+                        <figure slot="first" class="rounded-2xl w-[475px]">
+                            <img class="rounded-2xl w-[475px]" width="100%" src="{{ $result->input_image_url }}">
+                            <figcaption class="absolute top-0 left-0 px-4 py-2 bg-white text-gray-800 rounded-tl-md">
+                                <span>Before</span>
+                            </figcaption>
+                        </figure>
+                        <figure slot="second" class="rounded-2xl w-[475px]">
+                            <img class="rounded-2xl w-[475px]" width="100%" src="{{ $result->output_image_url }}">
+                            <figcaption class="absolute top-0 right-0 px-4 py-2 bg-white text-gray-800 rounded-tr-md">
+                                <span>After</span>
+                            </figcaption>
+                        </figure>
                     </img-comparison-slider>
+
 
                 </div>
 
