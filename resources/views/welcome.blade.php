@@ -28,7 +28,7 @@
                 <!-- Section header -->
                 <div class="text-center pb-12 md:pb-16">
                     <h1 class="text-5xl md:text-6xl font-bold leading-tighter tracking-tighter mb-4">
-                        Transform your <span
+                        Restore your <span
                             class="bg-clip-text text-transparent bg-gradient-to-r from-blue-500 to-teal-400">photos with AI</span>
                     </h1>
                     <div class="max-w-3xl mx-auto">
