@@ -1,7 +1,7 @@
 <!-- Site header -->
 <header class="fixed w-full z-30 md:bg-opacity-90 transition duration-300 ease-in-out" x-data="{ top: true }"
         @scroll.window="top = window.pageYOffset > 10 ? false : true"
-        :class="{ 'bg-white backdrop-blur-sm shadow-lg' : !top }">
+        :class="{ 'bg-white dark:bg-gray-800 backdrop-blur-sm shadow-lg' : !top }">
     <div class="max-w-6xl mx-auto px-5 sm:px-6">
         <div class="flex items-center justify-between h-16 md:h-20">
 
