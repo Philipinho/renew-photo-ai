@@ -29,23 +29,41 @@
                 <!-- Desktop menu links -->
                 <ul class="flex grow justify-end flex-wrap items-center">
                     <li>
-                        <a class="text-gray-600 hover:text-gray-900 px-3 lg:px-5 py-2 flex items-center transition duration-150 ease-in-out"
+                        <a class="px-3 lg:px-5 py-2 flex items-center transition duration-150 ease-in-out"
                            href="/">Home</a>
                     </li>
                     <li>
-                        <a class="text-gray-600 hover:text-gray-900 px-3 lg:px-5 py-2 flex items-center transition duration-150 ease-in-out"
+                        <a class="px-3 lg:px-5 py-2 flex items-center transition duration-150 ease-in-out"
                            href="#faq">FAQ</a>
                     </li>
                     <li>
-                        <a class="text-gray-600 hover:text-gray-900 px-3 lg:px-5 py-2 flex items-center transition duration-150 ease-in-out"
+                        <a class="px-3 lg:px-5 py-2 flex items-center transition duration-150 ease-in-out"
                            href="/">About</a>
                     </li>
                 </ul>
 
+
+                <!-- Desktop lights switch -->
+                <div class="form-switch flex flex-col justify-center ml-3">
+                    <input type="checkbox" name="light-switch" id="light-switch-desktop" class="light-switch sr-only" />
+                    <label class="relative" for="light-switch-desktop">
+                        <span class="relative bg-gradient-to-t from-gray-100 to-white dark:from-gray-800 dark:to-gray-700 shadow-sm z-10" aria-hidden="true"></span>
+                        <svg class="absolute inset-0" width="44" height="24" viewBox="0 0 44 24" xmlns="http://www.w3.org/2000/svg">
+                            <g class="fill-current text-white" fill-rule="nonzero" opacity=".88">
+                                <path d="M32 8a.5.5 0 00.5-.5v-1a.5.5 0 10-1 0v1a.5.5 0 00.5.5zM35.182 9.318a.5.5 0 00.354-.147l.707-.707a.5.5 0 00-.707-.707l-.707.707a.5.5 0 00.353.854zM37.5 11.5h-1a.5.5 0 100 1h1a.5.5 0 100-1zM35.536 14.829a.5.5 0 00-.707.707l.707.707a.5.5 0 00.707-.707l-.707-.707zM32 16a.5.5 0 00-.5.5v1a.5.5 0 101 0v-1a.5.5 0 00-.5-.5zM28.464 14.829l-.707.707a.5.5 0 00.707.707l.707-.707a.5.5 0 00-.707-.707zM28 12a.5.5 0 00-.5-.5h-1a.5.5 0 100 1h1a.5.5 0 00.5-.5zM28.464 9.171a.5.5 0 00.707-.707l-.707-.707a.5.5 0 00-.707.707l.707.707z" />
+                                <circle cx="32" cy="12" r="3" />
+                                <circle fill-opacity=".4" cx="12" cy="12" r="6" />
+                                <circle fill-opacity=".88" cx="12" cy="12" r="3" />
+                            </g>
+                        </svg>
+                        <span class="sr-only">Switch to light / dark mode</span>
+                    </label>
+                </div>
+
                 <!-- Desktop sign in links -->
                 <ul class="flex grow justify-end flex-wrap items-center">
                     <li>
-                        <a class="font-medium text-gray-600 hover:text-gray-900 px-5 py-3 flex items-center transition duration-150 ease-in-out"
+                        <a class="font-medium px-5 py-3 flex items-center transition duration-150 ease-in-out"
                            href="">Sign in</a>
                     </li>
                     <li>
@@ -67,6 +85,23 @@
 
             <!-- Mobile menu -->
             <div class="flex md:hidden" x-data="{ expanded: false }">
+
+                <!-- Mobile lights switch -->
+                <div class="form-switch flex flex-col justify-center mr-6 -mt-0.5">
+                    <input type="checkbox" name="light-switch" id="light-switch-mobile" class="light-switch sr-only" />
+                    <label class="relative" for="light-switch-mobile">
+                        <span class="relative bg-gradient-to-t from-gray-100 to-white dark:from-gray-800 dark:to-gray-700 shadow-sm z-10" aria-hidden="true"></span>
+                        <svg class="absolute inset-0" width="44" height="24" viewBox="0 0 44 24" xmlns="http://www.w3.org/2000/svg">
+                            <g class="fill-current text-white" fill-rule="nonzero" opacity=".88">
+                                <path d="M32 8a.5.5 0 00.5-.5v-1a.5.5 0 10-1 0v1a.5.5 0 00.5.5zM35.182 9.318a.5.5 0 00.354-.147l.707-.707a.5.5 0 00-.707-.707l-.707.707a.5.5 0 00.353.854zM37.5 11.5h-1a.5.5 0 100 1h1a.5.5 0 100-1zM35.536 14.829a.5.5 0 00-.707.707l.707.707a.5.5 0 00.707-.707l-.707-.707zM32 16a.5.5 0 00-.5.5v1a.5.5 0 101 0v-1a.5.5 0 00-.5-.5zM28.464 14.829l-.707.707a.5.5 0 00.707.707l.707-.707a.5.5 0 00-.707-.707zM28 12a.5.5 0 00-.5-.5h-1a.5.5 0 100 1h1a.5.5 0 00.5-.5zM28.464 9.171a.5.5 0 00.707-.707l-.707-.707a.5.5 0 00-.707.707l.707.707z" />
+                                <circle cx="32" cy="12" r="3" />
+                                <circle fill-opacity=".4" cx="12" cy="12" r="6" />
+                                <circle fill-opacity=".88" cx="12" cy="12" r="3" />
+                            </g>
+                        </svg>
+                        <span class="sr-only">Switch to light / dark mode</span>
+                    </label>
+                </div>
 
                 <!-- Hamburger button -->
                 <button
@@ -102,19 +137,19 @@
                 >
                     <ul class="px-5 py-2">
                         <li>
-                            <a class="flex text-gray-600 hover:text-gray-900 py-2" href="/">Home</a>
+                            <a class="flex py-2" href="/">Home</a>
                         </li>
                         <li>
-                            <a class="flex text-gray-600 hover:text-gray-900 py-2" href="#faq">FAQ</a>
+                            <a class="flex py-2" href="#faq">FAQ</a>
                         </li>
                         <li>
-                            <a class="flex text-gray-600 hover:text-gray-900 py-2" href="">About</a>
+                            <a class="flex py-2" href="">About</a>
                         </li>
                         <div class="py-2 my-2 border-b border-gray-200"></div>
 
 
                         <li>
-                            <a class="flex font-medium w-full text-gray-600 hover:text-gray-900 py-2 justify-center"
+                            <a class="flex font-medium w-full py-2 justify-center"
                                href="">Sign in</a>
                         </li>
                         <li>

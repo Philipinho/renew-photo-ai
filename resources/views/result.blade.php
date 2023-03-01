@@ -9,7 +9,7 @@
 
 
                 <div class="w-full max-w-sm mx-auto px-4">
-                    <div class="flex w-full border-4 border-gray-200 rounded-xl bg-gray-200 mb-12">
+                    <div class="flex w-full border-4 border-gray-200 rounded-xl bg-gray-200 dark:text-gray-800 mb-12">
                         <button
                             class="transition rounded-lg w-full block py-1 text-sm"
                             :class="preview == false ? 'bg-white shadow-ios' : 'hover:text-gray-400'"
@@ -28,12 +28,12 @@
                 <div class="flex justify-center sm:flex-row flex-col" :class="preview == true ? '' : 'hidden'">
 
                     <div class="mt-4 mx-3 relative">
-                        <h3 class="text-xl font-semibold text-center">Original Image</h3>
+                        <h3 class="text-xl font-semibold text-center mb-2">Original Image</h3>
                         <img src="{{ $result->input_image_url }}" class="rounded-2xl w-[475px]" loading="lazy">
                     </div>
 
                     <div class="mt-4 mx-1 relative">
-                        <h3 class="text-xl font-semibold text-center">Restored Image</h3>
+                        <h3 class="text-xl font-semibold text-center mb-2">Restored Image</h3>
                         <img src="{{ $result->output_image_url }}" class="rounded-2xl w-[475px]" loading="lazy">
                     </div>
 

@@ -20,9 +20,17 @@
         <!-- Scripts -->
         @vite(['resources/css/app.css', 'resources/js/app.js'])
 
+        <script>
+            if (localStorage.getItem('dark-mode') === 'false' || !('dark-mode' in localStorage)) {
+                document.querySelector('html').classList.remove('dark');
+            } else {
+                document.querySelector('html').classList.add('dark');
+            }
+        </script>
+
         <livewire:styles />
     </head>
-    <body class="font-sans antialiased bg-white text-gray-900 tracking-tight">
+    <body class="font-sans antialiased bg-white dark:bg-gray-800 text-gray-600 dark:text-slate-200 tracking-tight">
         <div class="flex flex-col min-h-screen overflow-hidden">
 
             @include('layouts.header')

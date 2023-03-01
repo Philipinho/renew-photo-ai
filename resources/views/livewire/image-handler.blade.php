@@ -4,8 +4,8 @@
 
         <div class="max-w-3xl mx-auto text-center pb-12 md:pb-16">
             <h1 class="text-3xl font-semibold mb-4">Restore photo</h1>
-            <p class="text-xl text-gray-600">
-                 Select your prefered image to restore and see the magic of AI.
+            <p class="text-xl">
+                 Select your preferred image to restore and see the magic of AI.
             </p>
         </div>
 

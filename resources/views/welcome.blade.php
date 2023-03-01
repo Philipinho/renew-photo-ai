@@ -32,7 +32,7 @@
                             class="bg-clip-text text-transparent bg-gradient-to-r from-blue-500 to-teal-400">photos with AI</span>
                     </h1>
                     <div class="max-w-3xl mx-auto">
-                        <p class="text-xl text-gray-600 mb-8" data-aos="zoom-y-out" data-aos-delay="150">
+                        <p class="text-xl mb-8" data-aos="zoom-y-out" data-aos-delay="150">
                             An AI photo restoration service uses machine learning to repair damaged or aged photos and
                             improve their quality, allowing individuals to preserve and cherish important memories for
                             years to come.
@@ -63,51 +63,76 @@
             <div class="py-12 md:py-20 border-t border-gray-200">
 
                 <!-- Section header -->
-                <div class="max-w-3xl mx-auto text-center pb-12 md:pb-16">
+                <div class="max-w-3xl mx-auto text-center pb-2 md:pb-2">
                     <h2 class="text-xl mb-4">FAQ</h2>
-                    <p class="text-xl text-gray-600">
-                        Answers to our top customer frequently asked questions.
-                    </p>
                 </div>
 
+                <div class="">
+                    <div class="mx-auto max-w-3xl px-6 py-5 sm:py-5 lg:py-5 lg:px-8">
 
-                <!-- Job list -->
-                <div class="max-w-3xl mx-auto">
-
-                    <h3 class="h4 mb-8">...</h3>
-
-                    <div class="-my-3">
-
-                        <!-- 1st Item -->
-                        <a class="flex justify-between items-center p-4 rounded border border-gray-200 transition duration-300 ease-in-out bg-gray-100 shadow-md hover:bg-white hover:shadow-lg mb-3"
-                           href="#0">
-                            <div class="font-medium">FAQ 1</div>
-                            <svg class="w-4 h-4 fill-current text-blue-600 shrink-0 ml-6" viewBox="0 0 16 16"
-                                 xmlns="http://www.w3.org/2000/svg">
-                                <path d="M13.707 1h-8v2h5.586L1 13.293l1.414 1.414L12.707 4.414V10h2V2a1 1 0 00-1-1z"/>
-                            </svg>
-                        </a>
-
-                        <!-- 2nd Item -->
-                        <a class="flex justify-between items-center p-4 rounded border border-gray-200 transition duration-300 ease-in-out bg-gray-100 shadow-md hover:bg-white hover:shadow-lg mb-3"
-                           href="#0">
-                            <div class="font-medium">FAQ 2</div>
-                            <svg class="w-4 h-4 fill-current text-blue-600 shrink-0 ml-6" viewBox="0 0 16 16"
-                                 xmlns="http://www.w3.org/2000/svg">
-                                <path d="M13.707 1h-8v2h5.586L1 13.293l1.414 1.414L12.707 4.414V10h2V2a1 1 0 00-1-1z"/>
-                            </svg>
-                        </a>
-
-                        <!-- 3rd Item -->
-                        <a class="flex justify-between items-center p-4 rounded border border-gray-200 transition duration-300 ease-in-out bg-gray-100 shadow-md hover:bg-white hover:shadow-lg mb-3"
-                           href="#0">
-                            <div class="font-medium">FAQ 3</div>
-                            <svg class="w-4 h-4 fill-current text-blue-600 shrink-0 ml-6" viewBox="0 0 16 16"
-                                 xmlns="http://www.w3.org/2000/svg">
-                                <path d="M13.707 1h-8v2h5.586L1 13.293l1.414 1.414L12.707 4.414V10h2V2a1 1 0 00-1-1z"/>
-                            </svg>
-                        </a>
-
+                        <div class="mx-auto max-w-3xl divide-y divide-gray-900/10">
+                            <h2 class="text-2xl font-bold leading-10 tracking-tight">Frequently asked
+                                questions</h2>
+                            <dl class="mt-4 space-y-6 divide-y divide-gray-900/10">
+                                <div x-data="{ open: true }" class="pt-6">
+                                    <dt>
+                                        <button type="button" x-description="Expand/collapse question button"
+                                                class="flex w-full items-start justify-between text-left"
+                                                aria-controls="faq-0" @click="open = !open" aria-expanded="true"
+                                                x-bind:aria-expanded="open.toString()">
+                                            <span class="text-base font-semibold leading-7">What's the best thing about Switzerland?</span>
+                                            <span class="ml-6 flex h-7 items-center">
+                        <svg x-description="Icon when question is collapsed." x-state:on="Item expanded"
+                             x-state:off="Item collapsed" class="h-6 w-6 hidden" :class="{ 'hidden': open }" fill="none"
+                             viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true">
+                           <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v12m6-6H6"></path>
+                        </svg>
+                        <svg x-description="Icon when question is expanded." x-state:on="Item expanded"
+                             x-state:off="Item collapsed" class="h-6 w-6" :class="{ 'hidden': !(open) }" fill="none"
+                             viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true">
+                           <path stroke-linecap="round" stroke-linejoin="round" d="M18 12H6"></path>
+                        </svg>
+                     </span>
+                                        </button>
+                                    </dt>
+                                    <dd class="mt-2 pr-12" id="faq-0" x-show="open">
+                                        <p class="text-base leading-7">I don't know, but the flag is a big
+                                            plus. Lorem ipsum dolor sit amet consectetur adipisicing elit. Quas
+                                            cupiditate laboriosam fugiat.</p>
+                                    </dd>
+                                </div>
+                                <div x-data="{ open: false }" class="pt-6">
+                                    <dt>
+                                        <button type="button" x-description="Expand/collapse question button"
+                                                class="flex w-full items-start justify-between text-left"
+                                                aria-controls="faq-1" @click="open = !open" aria-expanded="false"
+                                                x-bind:aria-expanded="open.toString()">
+                                            <span
+                                                class="text-base font-semibold leading-7">How do you make holy water?</span>
+                                            <span class="ml-6 flex h-7 items-center">
+                        <svg x-description="Icon when question is collapsed." x-state:on="Item expanded"
+                             x-state:off="Item collapsed" class="h-6 w-6" :class="{ 'hidden': open }" fill="none"
+                             viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true">
+                           <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v12m6-6H6"></path>
+                        </svg>
+                        <svg x-description="Icon when question is expanded." x-state:on="Item expanded"
+                             x-state:off="Item collapsed" class="hidden h-6 w-6" :class="{ 'hidden': !(open) }"
+                             fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
+                             aria-hidden="true">
+                           <path stroke-linecap="round" stroke-linejoin="round" d="M18 12H6"></path>
+                        </svg>
+                     </span>
+                                        </button>
+                                    </dt>
+                                    <dd class="mt-2 pr-12" id="faq-1" x-show="open" style="display: none;">
+                                        <p class="text-base leading-7">You boil the hell out of it. Lorem
+                                            ipsum dolor sit amet consectetur adipisicing elit. Magnam aut tempora vitae
+                                            odio inventore fuga aliquam nostrum quod porro. Delectus quia facere id
+                                            sequi expedita natus.</p>
+                                    </dd>
+                                </div>
+                            </dl>
+                        </div>
                     </div>
 
                 </div>
