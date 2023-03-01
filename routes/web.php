@@ -33,7 +33,11 @@ Route::get('/process', [ProcessController::class, 'show'])->name('process.show')
 
 Route::post('/process/upload', [ProcessController::class, 'uploadImage'])->name('process.upload');
 
-Route::get('/result', [ProcessController::class, 'result'])->name('process.result');
+Route::get('/result/{uuid}', [ProcessController::class, 'result'])->name('process.result');
+
+Route::get('/result', function () {
+    return redirect()->route('process.result', ['uuid' => request()->query('uuid')]);
+});
 
 // get status of the process
 Route::get('/status', [ProcessController::class, 'getStatus'])->name('process.status');
