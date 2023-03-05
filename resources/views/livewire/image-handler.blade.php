@@ -35,11 +35,13 @@
 
 
 <script>
+
     document.addEventListener('livewire:load', function () {
+
         let element_id = "#upload_area";
 
         let dropzone = new Dropzone(element_id, {
-            url: '{{ route('process.upload') }}',
+            url: '/process/upload',
             //autoProcessQueue: true,
             paramName: 'file', // The name that will be used to transfer the file
             maxFileCount: 1,    // Max files
